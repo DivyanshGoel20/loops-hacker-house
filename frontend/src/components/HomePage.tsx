@@ -46,10 +46,10 @@ export function HomePage() {
               <h2>3D NFT Figurines</h2>
               <p>Transform your NFTs into premium 3D figurine-style images with professional lighting and presentation</p>
               <div className="card-features">
-                <span>• Premium acrylic base</span>
-                <span>• Professional desk scene</span>
-                <span>• Packaging mockup</span>
-                <span>• Studio lighting</span>
+                <span>Premium acrylic base</span>
+                <span>Professional desk scene</span>
+                <span>Packaging mockup</span>
+                <span>Studio lighting</span>
               </div>
               <div className="cta-button">Create Figurine →</div>
             </div>
@@ -61,9 +61,9 @@ export function HomePage() {
               <h2>AI Images</h2>
               <p>Generate stunning images inspired by your NFTs using advanced AI</p>
               <div className="card-features">
-                <span>• Style Transfer</span>
-                <span>• Art Generation</span>
-                <span>• High Resolution</span>
+                <span>Style Transfer</span>
+                <span>Art Generation</span>
+                <span>High Resolution</span>
               </div>
             </div>
 
@@ -72,9 +72,9 @@ export function HomePage() {
               <h2>Recent Works</h2>
               <p>Browse your generated images and prompts</p>
               <div className="card-features">
-                <span>• View History</span>
-                <span>• Open via Gateway</span>
-                <span>• Mint</span>
+                <span>View History</span>
+                <span>Open via Gateway</span>
+                <span>Mint</span>
               </div>
             </div>
           </div>
