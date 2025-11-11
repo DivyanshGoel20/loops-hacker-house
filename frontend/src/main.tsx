@@ -2,9 +2,12 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
+import { Web3Providers } from './web3/rainbow.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <Web3Providers>
+      <App />
+    </Web3Providers>
   </StrictMode>,
 )
