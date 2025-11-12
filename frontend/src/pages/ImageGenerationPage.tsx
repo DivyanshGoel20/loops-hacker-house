@@ -48,7 +48,7 @@ export function ImageGenerationPage({ onBack }: ImageGenerationPageProps) {
       const imageUrls = selectedNFTs.length > 0 ? selectedNFTs.map(nft => nft.image_url) : [];
       
       console.log('Sending request to backend API...');
-      const response = await fetch('http://fargo-new.onrender.com/api/generate-image', {
+      const response = await fetch('http://localhost:3001/api/generate-image', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

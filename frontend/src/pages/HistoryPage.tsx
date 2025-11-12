@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useWriteContract, useWaitForTransactionReceipt, useChainId, useSwitchChain } from 'wagmi';
-import { arbitrum } from 'wagmi/chains';
 import { useAccount } from 'wagmi';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { filecoinCalibration } from '../web3/rainbow';
 import './GenerationPage.css';
+import '../components/HomePage.css';
 
 interface HistoryPageProps {
   onBack: () => void;
@@ -13,6 +15,7 @@ interface HistoryItem {
   id: number;
   walletAddress: string;
   ipfsUrl: string;
+  filecoinUrl?: string;
   cid: string;
   gatewayUrl: string | null;
   accessUrl?: string | null;
@@ -32,7 +35,7 @@ export function HistoryPage({ onBack }: HistoryPageProps) {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`http://fargo-new.onrender.com/api/history/${address}`);
+        const res = await fetch(`http://localhost:3001/api/history/${address}`);
         if (!res.ok) throw new Error('Failed to fetch history');
         const data = await res.json();
         setItems(data.items || []);
@@ -47,7 +50,20 @@ export function HistoryPage({ onBack }: HistoryPageProps) {
   }, [address]);
 
   return (
-    <div className="generation-page">
+    <div className="homepage">
+      <header className="topbar">
+        <div className="container topbar-content">
+          <div className="brand">
+            <div className="brand-name">Crafture</div>
+            <div className="tagline">Turn Your Digital Collection into AI‑Generated Masterpieces.</div>
+          </div>
+          <div className="wallet">
+            <ConnectButton />
+          </div>
+        </div>
+      </header>
+      <main className="container">
+        <div className="generation-page">
       <div className="page-header">
         <div className="breadcrumb">
           <button onClick={onBack} className="breadcrumb-link">← Back to Home</button>
@@ -74,26 +90,52 @@ export function HistoryPage({ onBack }: HistoryPageProps) {
               {items.length === 0 && (
                 <p>No items yet. Generate your first image!</p>
               )}
-              {items.map((item) => (
-                <div key={item.id} className="generated-image-container" style={{ display: 'grid', gridTemplateColumns: '240px 1fr', gap: '1rem', alignItems: 'start' }}>
-                  <div style={{ width: '240px' }}>
-                    {item.accessUrl || item.gatewayUrl ? (
-                      <img src={item.accessUrl || item.gatewayUrl as string} alt={item.prompt} className="generated-image" style={{ maxHeight: '240px', objectFit: 'cover' }} />
-                    ) : (
-                      <div style={{ height: '240px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>Image unavailable</div>
-                    )}
-                  </div>
-                  <div>
-                    <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.75rem', flexWrap: 'wrap' }}>
-                      <MintButton imageUrl={(item.accessUrl || item.gatewayUrl) as string} />
+              {items.map((item) => {
+                // Use gatewayUrl, ipfsUrl, or filecoinUrl (in that order of preference)
+                const imageUrl = item.gatewayUrl || item.ipfsUrl || item.filecoinUrl;
+                
+                return (
+                  <div key={item.id} className="generated-image-container" style={{ display: 'grid', gridTemplateColumns: '240px 1fr', gap: '1rem', alignItems: 'start' }}>
+                    <div style={{ width: '240px' }}>
+                      {imageUrl ? (
+                        <img 
+                          src={imageUrl} 
+                          alt={item.prompt} 
+                          className="generated-image" 
+                          style={{ maxHeight: '240px', objectFit: 'cover', width: '100%', borderRadius: '8px' }}
+                          onError={(e) => {
+                            console.error('Failed to load image:', imageUrl);
+                            e.currentTarget.style.display = 'none';
+                            const errorDiv = document.createElement('div');
+                            errorDiv.textContent = 'Image unavailable';
+                            errorDiv.style.cssText = 'height: 240px; display: flex; align-items: center; justify-content: center; color: #94a3b8;';
+                            e.currentTarget.parentElement?.appendChild(errorDiv);
+                          }}
+                        />
+                      ) : (
+                        <div style={{ height: '240px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>Image unavailable</div>
+                      )}
+                    </div>
+                    <div>
+                      <div style={{ marginBottom: '0.5rem' }}>
+                        <p style={{ color: '#cbd5e1', fontSize: '14px', marginBottom: '0.5rem' }}><strong>Prompt:</strong> {item.prompt}</p>
+                        <p style={{ color: '#94a3b8', fontSize: '12px' }}>{new Date(item.createdAt).toLocaleString()}</p>
+                      </div>
+                      {imageUrl && (
+                        <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.75rem', flexWrap: 'wrap' }}>
+                          <MintButton imageUrl={imageUrl} />
+                        </div>
+                      )}
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
       )}
+        </div>
+      </main>
     </div>
   );
 }
@@ -106,18 +148,16 @@ function MintButton({ imageUrl }: { imageUrl: string }) {
   const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash: txHash });
 
   const [open, setOpen] = useState(false);
-  const [targetChainId, setTargetChainId] = useState<number | null>(null);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [metadataUrl, setMetadataUrl] = useState<string | null>(null);
 
-  const handleOpenForChain = async (desiredChainId: number) => {
-    setTargetChainId(desiredChainId);
+  const handleOpenForFilecoin = async () => {
     try {
-      if (chainId !== desiredChainId) {
-        await switchChain({ chainId: desiredChainId });
+      if (chainId !== filecoinCalibration.id) {
+        await switchChain({ chainId: filecoinCalibration.id });
       }
     } catch {}
     setOpen(true);
@@ -128,33 +168,35 @@ function MintButton({ imageUrl }: { imageUrl: string }) {
     setError(null);
     setMetadataUrl(null);
     try {
-      const res = await fetch('http://fargo-new.onrender.com/api/metadata', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name.trim(), description: description.trim(), image: imageUrl })
-      });
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err?.error || 'Failed to upload metadata');
+      // Create ERC-721 metadata JSON locally
+      const metadata = {
+        name: name.trim(),
+        description: description.trim(),
+        image: imageUrl // Use the IPFS URL from Supabase
+      };
+
+      // Convert to JSON string and encode as base64 data URI
+      const jsonString = JSON.stringify(metadata, null, 2);
+      const base64Encoded = btoa(unescape(encodeURIComponent(jsonString)));
+      const dataUri = `data:application/json;base64,${base64Encoded}`;
+
+      console.log('Created metadata:', metadata);
+      console.log('Data URI:', dataUri);
+      setMetadataUrl(dataUri);
+
+      // Switch to Filecoin Calibration network if needed
+      if (chainId !== filecoinCalibration.id) {
+        try { 
+          await switchChain({ chainId: filecoinCalibration.id }); 
+        } catch (switchError) {
+          console.error('Failed to switch chain:', switchError);
+          throw new Error('Please switch to Filecoin Calibration network');
+        }
       }
-      const data = await res.json();
-      setMetadataUrl(data.ipfsUrl || data.gatewayUrl);
-      console.log('Metadata uploaded:', data);
-      const uri = data.ipfsUrl || data.gatewayUrl;
-      setMetadataUrl(uri);
-      const effectiveChainId = targetChainId ?? chainId;
-      if (effectiveChainId == null) {
-        throw new Error('No target chain selected');
-      }
-      if (chainId !== effectiveChainId) {
-        try { await switchChain({ chainId: effectiveChainId }); } catch {}
-      }
-      const contractAddress = effectiveChainId === arbitrum.id
-        ? '0x5411F7EB719EAA802b4c5F3265f6d4a545663E87'
-        : effectiveChainId === somniaMainnet.id
-          ? '0x5f9B3D55A780e2575509C84b38B0715E9c6bAC55'
-          : undefined;
-      if (!contractAddress) throw new Error('Unsupported chain for minting');
+
+      const contractAddress = '0x06f5E73C1E1671F44a55A665592a8F4D65f2E010';
+      
+      // Send data URI directly to contract (no IPFS upload needed)
       try {
         writeContract({
           abi: [
@@ -168,10 +210,11 @@ function MintButton({ imageUrl }: { imageUrl: string }) {
           ],
           address: contractAddress as `0x${string}`,
           functionName: 'mintNFT',
-          args: [uri]
+          args: [dataUri]
         });
       } catch (e) {
         console.error('Contract write failed:', e);
+        throw e;
       }
       setLoading(false);
     } catch (e) {
@@ -183,22 +226,17 @@ function MintButton({ imageUrl }: { imageUrl: string }) {
   return (
     <>
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-        <button className="generate-button" style={{ width: 'auto' }} onClick={() => handleOpenForChain(arbitrum.id)}>
-          Mint on Arbitrum One
-        </button>
-        <button className="generate-button" style={{ width: 'auto', background: 'linear-gradient(90deg,#334155,#1e293b)' }} onClick={() => handleOpenForChain(somniaMainnet.id)}>
-          Mint on Somnia Mainnet
+        <button className="generate-button" style={{ width: 'auto' }} onClick={handleOpenForFilecoin}>
+          Mint on Filecoin Calibration
         </button>
       </div>
       {open && createPortal(
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'grid', placeItems: 'center', zIndex: 999999 }}>
           <div style={{ background: 'rgba(15,23,42,0.98)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 12, padding: 20, width: 420, maxWidth: '90%', zIndex: 1000000, boxShadow: '0 20px 50px rgba(0,0,0,0.6)' }}>
             <h3 style={{ color: 'white', marginBottom: 12 }}>Mint NFT</h3>
-            {targetChainId && (
-              <div style={{ color: '#94a3b8', fontSize: 12, marginBottom: 8 }}>
-                Network: {targetChainId === arbitrum.id ? 'Arbitrum One' : targetChainId === somniaMainnet.id ? 'Somnia Mainnet' : targetChainId}
-              </div>
-            )}
+            <div style={{ color: '#94a3b8', fontSize: 12, marginBottom: 8 }}>
+              Network: Filecoin Calibration Testnet
+            </div>
             <div style={{ color: '#cbd5e1', fontSize: 12, marginBottom: 8 }}>Image</div>
             <div style={{ color: '#94a3b8', fontSize: 12, marginBottom: 8, wordBreak: 'break-all' }}>{imageUrl}</div>
             <div style={{ color: '#cbd5e1', fontSize: 12, marginTop: 8 }}>Name</div>

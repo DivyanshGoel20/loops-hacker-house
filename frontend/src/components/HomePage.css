@@ -150,7 +150,7 @@
     margin-left: auto;
     margin-right: auto;
     animation: fadeInUp 1s ease-out 0.8s both;
-    overflow: clip;
+    overflow: visible; /* allow hover lift without clipping */
   }
 
   /* Final section spacing guard to remove extra space at bottom */
@@ -215,7 +215,7 @@
   }
   
   .option-card:hover {
-    transform: translateY(-12px) scale(1.03);
+    transform: translateY(-8px) scale(1.02);
     box-shadow: 
       0 32px 64px rgba(0, 0, 0, 0.4),
       0 0 40px rgba(124, 127, 200, 0.2),

@@ -22,7 +22,6 @@ const CHAIN_MAP: { [key: number]: string } = {
   137: 'matic',
   8453: 'base',
   42161: 'arbitrum',
-  5031: 'somnia'
 };
 
 export function NFTGallery({ onSelectionChange, selectionMode = false }: NFTGalleryProps) {
