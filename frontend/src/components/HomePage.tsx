@@ -3,11 +3,10 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { ImageGenerationPage } from '../pages/ImageGenerationPage';
 import FigurineGenerationPage from '../pages/FigurineGenerationPage';
 import { HistoryPage } from '../pages/HistoryPage';
-import { StorageStats } from './StorageStats';
 import './HomePage.css';
 
 export function HomePage() {
-  const [currentPage, setCurrentPage] = useState<'home' | 'image' | 'figurine' | 'history' | 'stats'>('home');
+  const [currentPage, setCurrentPage] = useState<'home' | 'image' | 'figurine' | 'history'>('home');
 
   if (currentPage === 'image') {
     return <ImageGenerationPage onBack={() => setCurrentPage('home')} />;
@@ -19,45 +18,6 @@ export function HomePage() {
 
   if (currentPage === 'history') {
     return <HistoryPage onBack={() => setCurrentPage('home')} />;
-  }
-
-  if (currentPage === 'stats') {
-    return (
-      <div className="homepage">
-        <header className="topbar">
-          <div className="container topbar-content">
-            <div className="brand">
-              <div className="brand-name">Crafture</div>
-              <div className="tagline">Turn Your Digital Collection into AI‑Generated Masterpieces.</div>
-            </div>
-            <div className="wallet">
-              <ConnectButton />
-            </div>
-          </div>
-        </header>
-        <main>
-          <div className="container">
-            <div style={{ marginBottom: '2rem' }}>
-              <button 
-                onClick={() => setCurrentPage('home')} 
-                style={{
-                  background: 'rgba(255, 255, 255, 0.1)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  borderRadius: '8px',
-                  padding: '0.5rem 1rem',
-                  color: 'white',
-                  cursor: 'pointer',
-                  fontSize: '0.9rem'
-                }}
-              >
-                ← Back to Home
-              </button>
-            </div>
-            <StorageStats />
-          </div>
-        </main>
-      </div>
-    );
   }
 
   return (
@@ -113,31 +73,6 @@ export function HomePage() {
                 <span>Mint</span>
               </div>
             </div>
-          </div>
-
-          <div style={{ marginTop: '3rem', textAlign: 'center' }}>
-            <button
-              onClick={() => setCurrentPage('stats')}
-              style={{
-                background: 'rgba(255, 255, 255, 0.1)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                borderRadius: '12px',
-                padding: '0.75rem 1.5rem',
-                color: 'white',
-                cursor: 'pointer',
-                fontSize: '0.9rem',
-                fontWeight: 500,
-                transition: 'all 0.3s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
-              }}
-            >
-              📊 View Storage Stats
-            </button>
           </div>
         </div>
       </main>

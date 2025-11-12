@@ -356,6 +356,7 @@
   gap: 0.75rem;
   flex-wrap: wrap;
   margin-bottom: 1rem;
+  justify-content: space-between;
 }
 
 .gallery-header h2 {
@@ -373,18 +374,23 @@
 
 .refresh-button {
   margin-left: auto;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
-  padding: 0.5rem 0.9rem;
+  background: none;
+  border: none;
+  border-radius: 0;
+  padding: 0;
   color: #e2e8f0;
   font-size: 0.9rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .refresh-button:hover {
-  background: rgba(255, 255, 255, 0.18);
+  color: #f8fafc;
 }
 
 .nft-grid {
