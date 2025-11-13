@@ -19,7 +19,7 @@ interface Prompt {
 }
 
 export function BrowsePromptsPage({ onBack }: BrowsePromptsPageProps) {
-  const { isConnected, address } = useAccount();
+  const { isConnected } = useAccount();
   const [prompts, setPrompts] = useState<Prompt[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
