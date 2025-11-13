@@ -45,70 +45,53 @@ export function HomePage() {
       </header>
       <main>
         <div className="container">
-          <div className="main-feature">
-            <div className="featured-card figurine-card" onClick={() => setCurrentPage('figurine')}> 
-              <div className="featured-badge">⭐ Featured</div>
-              <div className="card-icon">🧸</div>
-              <h2>3D NFT Figurines</h2>
-              <p>Transform your NFTs into premium 3D figurine-style images with professional lighting and presentation</p>
-              <div className="card-features">
-                <span>Premium acrylic base</span>
-                <span>Professional desk scene</span>
-                <span>Packaging mockup</span>
-                <span>Studio lighting</span>
-              </div>
-              <div className="cta-button">Create Figurine →</div>
+          {/* Hero Section */}
+          <div className="hero-section">
+            <h1>Transform Your NFTs</h1>
+            <p>Create stunning AI-generated art from your digital collection</p>
+          </div>
+
+          {/* Main Action - AI Images */}
+          <div className="main-action">
+            <div className="primary-action-card" onClick={() => setCurrentPage('image')}>
+              <div className="primary-icon">🎨</div>
+              <h2>AI Image Generation</h2>
+              <p>Transform your NFTs into stunning AI-generated artwork with custom prompts and style transfer</p>
+              <div className="primary-action-button">Start Generating →</div>
             </div>
           </div>
 
-          <div className="secondary-options">
-            <div className="option-card image-card" onClick={() => setCurrentPage('image')}>
-              <div className="card-icon">🎨</div>
-              <h2>AI Images</h2>
-              <p>Generate stunning images inspired by your NFTs using advanced AI</p>
-              <div className="card-features">
-                <span>Style Transfer</span>
-                <span>Art Generation</span>
-                <span>High Resolution</span>
+          {/* All Features Grid */}
+          <div className="features-section">
+            <h2 className="section-title">All Features</h2>
+            <div className="features-grid">
+              <div className="feature-card" onClick={() => setCurrentPage('figurine')}>
+                <div className="feature-icon">🧸</div>
+                <h3>3D Figurines</h3>
+                <p>Create premium 3D figurine-style images</p>
               </div>
-            </div>
 
-            <div className="option-card history-card" onClick={() => setCurrentPage('history')}>
-              <div className="card-icon">🗂️</div>
-              <h2>Recent Works</h2>
-              <p>Browse your generated images and prompts</p>
-              <div className="card-features">
-                <span>View History</span>
-                <span>Open via Gateway</span>
-                <span>Mint</span>
+              <div className="feature-card" onClick={() => setCurrentPage('history')}>
+                <div className="feature-icon">🗂️</div>
+                <h3>Recent Works</h3>
+                <p>View your generation history</p>
               </div>
-            </div>
 
-            <div className="option-card" onClick={() => setCurrentPage('custom-prompts')} style={{ cursor: 'pointer' }}>
-              <div className="card-icon">💡</div>
-              <h2>Create Prompt</h2>
-              <p>Create and monetize your AI prompts</p>
-              <div className="card-features">
-                <span>Encrypted Storage</span>
-                <span>Set Your Price</span>
-                <span>Before/After Images</span>
+              <div className="feature-card" onClick={() => setCurrentPage('custom-prompts')}>
+                <div className="feature-icon">💡</div>
+                <h3>Create Prompt</h3>
+                <p>Monetize your AI prompts</p>
               </div>
-            </div>
 
-            <div className="option-card" onClick={() => setCurrentPage('browse-prompts')} style={{ cursor: 'pointer' }}>
-              <div className="card-icon">🔍</div>
-              <h2>Browse Prompts</h2>
-              <p>Discover and use prompts created by others</p>
-              <div className="card-features">
-                <span>Browse Marketplace</span>
-                <span>Pay to Use</span>
-                <span>Preview Results</span>
+              <div className="feature-card" onClick={() => setCurrentPage('browse-prompts')}>
+                <div className="feature-icon">🔍</div>
+                <h3>Browse Prompts</h3>
+                <p>Discover prompts marketplace</p>
               </div>
             </div>
           </div>
         </div>
       </main>
-
     </div>
   );
 }
