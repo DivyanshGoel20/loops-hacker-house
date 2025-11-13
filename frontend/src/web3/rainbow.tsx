@@ -1,7 +1,7 @@
 import '@rainbow-me/rainbowkit/styles.css'
 import { RainbowKitProvider, darkTheme, getDefaultConfig } from '@rainbow-me/rainbowkit'
 import { WagmiProvider } from 'wagmi'
-import { mainnet, sepolia, arbitrum } from 'wagmi/chains'
+import { mainnet, base, arbitrum } from 'wagmi/chains'
 import type { Chain } from 'wagmi/chains'
 import type { ReactNode } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -36,7 +36,7 @@ export const filecoinCalibration: Chain = {
 export const wagmiConfig = getDefaultConfig({
 	appName: 'Loops Hacker House',
 	projectId,
-	chains: [mainnet, sepolia, arbitrum, filecoinCalibration],
+	chains: [mainnet, base, arbitrum, filecoinCalibration],
 	ssr: false
 })
 
